@@ -1,26 +1,27 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Col, Row } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
 import Product from '../components/Product'
-import axios from 'axios'
+import { listProducts } from '../actions/productActions'
 
 const HomeScreen = () => {
 
-    const [products, setProducts] = useState([])
+    const dispatch = useDispatch()
+
+    // Selecciona una parte de todo el estado.
+    // productList es como se llama la propiead en el store cuando se definió el reducer.
+    const productList = useSelector(state => state.productList)
+    const { loading, error, products } = productList
 
     useEffect( () => {
-        const fetchProducts = async () => {
-            const { data } = await axios.get('/api/products')
-
-            setProducts(data)
-        }
-
-        fetchProducts()
-
-    }, [])
+        // Se dispara la acción para listar productos
+        dispatch(listProducts())
+    }, [dispatch])
 
     return (
         <>
             <h1>Latests Products</h1>
+            { loading ? <h2>Loading...</h2> : error ? <h3>{error}</h3> :
             <Row>
                 {products.map(product => (
                     <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
@@ -28,6 +29,7 @@ const HomeScreen = () => {
                     </Col>
                 ))}
             </Row>
+            }
         </>
     )
 }
