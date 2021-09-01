@@ -6,7 +6,7 @@ import ListGroup from "react-bootstrap/ListGroup"
 import Form from "react-bootstrap/Form"
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
-import { addToCart } from "../actions/cartActions"
+import { addToCart, removeFromCart } from "../actions/cartActions"
 import Message from "../components/Message"
 import { Button, Card } from "react-bootstrap"
 
@@ -29,7 +29,7 @@ const CartScreen = ({ match, location, history }) => {
     }, [dispatch, productId, qty])
 
     const removeFromCartHandler = (id) => {
-        console.log('remove' + id)
+        dispatch(removeFromCart(id))
     }
 
     const checkoutHandler = () => {
@@ -79,8 +79,8 @@ const CartScreen = ({ match, location, history }) => {
                             <h2>Subtotal ({cartItems.reduce((acc, item) => acc + item.qty, 0 )}) items</h2>
                             ${cartItems.reduce((acc, item) => acc + item.price * item.qty, 0).toFixed(2)}
                         </ListGroup.Item>
-                        <ListGroup.Item className="d-grid" disable={cartItems.length === 0} onClick={checkoutHandler}>
-                            <Button>Proceed to Checkout</Button>
+                        <ListGroup.Item className="d-grid">
+                            <Button disabled={cartItems.length === 0} onClick={checkoutHandler}>Proceed to Checkout</Button>
                         </ListGroup.Item>
                     </ListGroup>
                 </Card>
